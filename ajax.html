@@ -1,0 +1,96 @@
+<!doctype html>
+<html>
+  <head>
+  	<title>Would You Rather...?</title>
+    <link rel="icon" href="icon.png">
+    <style>
+      #question {
+        font-family: Arial;
+        font-weight: bold;
+        text-align: center;
+      }
+      
+      body {
+        margin: 0px;
+        text-align: center;
+        background-color: #91bdd9;
+      }
+      
+      .header {
+        display: block;
+        background-color: #a11902;
+        font-size: 20px;
+        font-family: Futura;
+        padding: 30px;
+        vertical-align: middle;
+        text-align: center;
+        color: white;
+      }
+
+      h1 {
+        display: inline-block;
+        font-size: 50px;
+        margin: 0px;
+        padding: 0px;
+      }
+      
+      .about {
+        font-family: Arial;
+        margin: 15px;
+      }
+    </style>
+  </head>
+  <body>
+    <script language="javascript">
+  		
+      const API_URL = "https://api.aakhilv.me/fun/wyr";
+      
+      window.onload = function() {
+
+  			request = new XMLHttpRequest();
+  			request.open("GET", API_URL, true);
+   	
+  			request.onreadystatechange = function() {
+  				
+  				if (request.readyState == 4 && request.status == 200) {
+            jsonData = request.responseText;
+            stringData = JSON.parse(jsonData);
+  				  document.getElementById("question").innerHTML = stringData;
+  				} else {
+            console.log("Error - status: " + request.status +
+                        ", readyState: " + request.readyState);
+          }
+  			}
+  			request.send();
+  		}
+      
+  	</script>
+    
+    <!-- Header -->
+    <div class="header">
+      <h1>Would You Rather?</h1>
+      <br>Ponder which option you'd rather take...
+    </div>
+    <br><br>
+    
+    <!-- API Data Div -->
+  	<div id="question">Loading...</div>
+    
+    <!-- API Information -->
+    <div class="about">
+      <br>
+      The API I selected returns a random would-you-rather prompt as a JSON object.
+      I found on <a href="https://api.aakhilv.me">this website</a> via the list of 
+      free APIs from the Reading Page on Canvas. Since the API just returns a single
+      string (the prompt), that is the only piece of information I used. This API
+      may be useful if you're bored - maybe on a website where things take a while
+      to load/process, you can use this API to relieve the user of boredom as they 
+      wait. It could also be helpful in creating some sort of game website. For
+      example, there could be a compatibility game where you and a friend answer a 
+      series of these would-you-rather questions, and the the more often you answer 
+      the same, the higher your score is. Rather than coming up with a load of 
+      questions yourself, you could just use these.
+    </div>
+    
+  </body>
+</html>
