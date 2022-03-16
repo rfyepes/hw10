@@ -1,0 +1,170 @@
+<!doctype html>
+<html>
+  <head>
+  	<title>Trivia Quiz</title>
+    <link rel="stylesheet" href="style.css"> 
+    <link rel="icon" href="icon.png">
+  </head>
+  <body>
+    <script language="javascript">
+  		
+      const API_URL = "https://opentdb.com/api.php?amount=5&category=9&difficulty=easy&type=boolean";
+      const NUM_QUESTIONS = 5;
+      var data;
+      
+      window.onload = function() {
+        
+  			request = new XMLHttpRequest();
+  			request.open("GET", API_URL, true);
+   	
+  			request.onreadystatechange = function() {
+  				
+  				if (request.readyState == 4 && request.status == 200) {
+            result = request.responseText;
+            data = JSON.parse(result);
+            data = data.results;
+            printQuiz(data);
+  				} else {
+            console.log("Error - status: " + request.status +
+                        ", readyState: " + request.readyState);
+          }
+  			}
+  			request.send();
+        
+        button = document.getElementById("button");
+        button.addEventListener("click", submitQuiz);
+  		}
+      
+      function printQuiz(data)
+      {
+        for (let i = 0; i < data.length; i++) {
+          document.getElementById("q" + i).innerHTML = data[i].question;
+        }
+      }
+      
+      function submitQuiz()
+      {
+        responses = getResponses();
+        
+        if (responses.includes(null)) {
+          alert("You haven't answered every question!");
+          return;
+        }
+        
+        numCorrect = checkAnswers(responses);
+        
+        document.getElementById("results").innerHTML = numCorrect + "/" + 
+                                                       NUM_QUESTIONS + "<br><br>";
+      }
+      
+      function getResponses()
+      {
+        responseArray = [];
+        
+        for (let i = 0; i < NUM_QUESTIONS; i++) {
+          responseArray.push(getResponse(i));
+        }
+        return responseArray;
+      }
+      
+      function getResponse(num)
+      {
+        options = document.getElementsByName("a" + num);
+        for (let i = 0; i < options.length; i++) {
+          if (options[i].checked) {
+            return options[i].value;
+          }
+        }
+        return null;
+      }
+      
+      function checkAnswers(responses)
+      {
+        numCorrect = 0;
+        for (let i = 0; i < responses.length; i++) {
+          if (responses[i] == data[i].correct_answer) {
+            document.getElementById("r" + i).innerHTML = "Correct!";
+            numCorrect++;
+          } else {
+            document.getElementById("r" + i).innerHTML = "WRONG!"
+          }
+        }
+        return numCorrect;
+      }
+      
+      
+  	</script>
+    
+    <!-- Header -->
+    <div class="header">
+      <h1>Trivia Quiz</h1>
+      <br>See how smart you are with this quick quiz!
+    </div>
+    
+    <!-- Quiz -->
+    <div class="quiz">
+      <div class="question">
+        <div id="q0" class="q"></div>
+        <form>
+          True <input type="radio" name="a0" value="True">&nbsp;&nbsp;&nbsp;
+          False <input type="radio" name="a0" value="False">
+        </form>
+        <div id="r0"><br></div>
+      </div>
+      <div class="question">
+        <div id="q1" class="q"></div>
+        <form>
+          True <input type="radio" name="a1" value="True">&nbsp;&nbsp;&nbsp;
+          False <input type="radio" name="a1" value="False">
+        </form>
+        <div id="r1"><br></div>
+      </div>
+      <div class="question">
+        <div id="q2" class="q"></div>
+        <form>
+          True <input type="radio" name="a2" value="True">&nbsp;&nbsp;&nbsp;
+          False <input type="radio" name="a2" value="False">
+        </form>
+        <div id="r2"><br></div>
+      </div>
+      <div class="question">
+        <div id="q3" class="q"></div>
+        <form>
+          True <input type="radio" name="a3" value="True">&nbsp;&nbsp;&nbsp;
+          False <input type="radio" name="a3" value="False">
+        </form>
+        <div id="r3"><br></div>
+      </div>
+      <div class="question">
+        <div id="q4" class="q"></div>
+        <form>
+          True <input type="radio" name="a4" value="True">&nbsp;&nbsp;&nbsp;
+          False <input type="radio" name="a4" value="False">
+        </form>
+        <div id="r4"><br></div>
+      </div>
+      <div id="results"></div>
+      <input type="button" id="button" value="Submit!"><br><br><br>
+    </div>
+    
+    <!-- API Information -->
+    <div class="info">
+      The API I selected is for trivia. You can alter the link to change how 
+      many questions to get, the difficulty, and the type (in my case, I chose 
+      true or false). I found it on <a href="https://opentdb.com/api_config.php">
+      this website</a>, via the list of free APIs from the Reading Page on Canvas.
+      This API returns a JSON array of objects (5 objects for 5 questions in 
+      this case) with a lot of information for each question, including category,
+      difficulty, correct answer, and incorrect answers. I only needed to use 
+      the question string itself and the correct answer, since I knew I was only 
+      dealing with true or false questions. On this page, I used the AJAX data 
+      pattern method we learned in class by using XMLHttpRequest and the 
+      readyState and status options to ensure the data was ready. This API 
+      may be helpful for game websites like the one I tried to model this site 
+      after - for entertainment purposes, mainly. It could also be used in 
+      sites like Canvas for randomized quizzes if a teacher wants each student 
+      to get a different variation of questions (they could use the category and
+      difficulty options to ensure the type of questions are all the same).
+    </div>
+  </body>
+</html>
